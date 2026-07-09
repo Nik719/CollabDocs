@@ -18,6 +18,21 @@
       "item": [
         {
           "name": "Create User",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "if (pm.response.code === 201) {",
+                  "    const json = pm.response.json();",
+                  "    pm.collectionVariables.set('user_id', json.id);",
+                  "    console.log('Set user_id =', json.id);",
+                  "}"
+                ]
+              }
+            }
+          ],
           "request": {
             "method": "POST",
             "header": [{"key": "Content-Type", "value": "application/json"}],
@@ -42,6 +57,21 @@
       "item": [
         {
           "name": "Create Workspace",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "if (pm.response.code === 201) {",
+                  "    const json = pm.response.json();",
+                  "    pm.collectionVariables.set('workspace_id', json.id);",
+                  "    console.log('Set workspace_id =', json.id);",
+                  "}"
+                ]
+              }
+            }
+          ],
           "request": {
             "method": "POST",
             "header": [{"key": "Content-Type", "value": "application/json"}],
@@ -49,6 +79,13 @@
               "mode": "raw",
               "raw": "{\n  \"name\": \"Engineering Team\",\n  \"owner\": \"{{user_id}}\"\n}"
             },
+            "url": {"raw": "{{base_url}}/workspaces/", "host": ["{{base_url}}"], "path": ["workspaces", ""]}
+          }
+        },
+        {
+          "name": "List All Workspaces",
+          "request": {
+            "method": "GET",
             "url": {"raw": "{{base_url}}/workspaces/", "host": ["{{base_url}}"], "path": ["workspaces", ""]}
           }
         },
@@ -92,6 +129,21 @@
       "item": [
         {
           "name": "Create Document",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "if (pm.response.code === 201) {",
+                  "    const json = pm.response.json();",
+                  "    pm.collectionVariables.set('document_id', json.id);",
+                  "    console.log('Set document_id =', json.id);",
+                  "}"
+                ]
+              }
+            }
+          ],
           "request": {
             "method": "POST",
             "header": [{"key": "Content-Type", "value": "application/json"}],
@@ -100,6 +152,13 @@
               "raw": "{\n  \"title\": \"API Design Spec\",\n  \"content\": \"This document outlines the REST API design for CollabDocs.\",\n  \"workspace\": \"{{workspace_id}}\",\n  \"created_by\": \"{{user_id}}\",\n  \"status\": \"draft\"\n}"
             },
             "url": {"raw": "{{base_url}}/documents/", "host": ["{{base_url}}"], "path": ["documents", ""]}
+          }
+        },
+        {
+          "name": "Get Document by ID",
+          "request": {
+            "method": "GET",
+            "url": {"raw": "{{base_url}}/documents/{{document_id}}/", "host": ["{{base_url}}"], "path": ["documents", "{{document_id}}", ""]}
           }
         },
         {
@@ -164,6 +223,21 @@
       "item": [
         {
           "name": "Add Top-Level Comment",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "if (pm.response.code === 201) {",
+                  "    const json = pm.response.json();",
+                  "    pm.collectionVariables.set('comment_id', json.id);",
+                  "    console.log('Set comment_id =', json.id);",
+                  "}"
+                ]
+              }
+            }
+          ],
           "request": {
             "method": "POST",
             "header": [{"key": "Content-Type", "value": "application/json"}],
@@ -205,6 +279,21 @@
       "item": [
         {
           "name": "Create Tag",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "if (pm.response.code === 201) {",
+                  "    const json = pm.response.json();",
+                  "    pm.collectionVariables.set('tag_id', json.id);",
+                  "    console.log('Set tag_id =', json.id);",
+                  "}"
+                ]
+              }
+            }
+          ],
           "request": {
             "method": "POST",
             "header": [{"key": "Content-Type", "value": "application/json"}],
