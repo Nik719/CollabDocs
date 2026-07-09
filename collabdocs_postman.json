@@ -1,0 +1,250 @@
+{
+  "info": {
+    "name": "CollabDocs API",
+    "description": "Complete Postman collection for CollabDocs — Collaborative Document Platform",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {"key": "base_url", "value": "http://localhost:8000/api", "type": "string"},
+    {"key": "user_id", "value": "", "type": "string"},
+    {"key": "workspace_id", "value": "", "type": "string"},
+    {"key": "document_id", "value": "", "type": "string"},
+    {"key": "comment_id", "value": "", "type": "string"},
+    {"key": "tag_id", "value": "", "type": "string"}
+  ],
+  "item": [
+    {
+      "name": "Users",
+      "item": [
+        {
+          "name": "Create User",
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"first_name\": \"Alice\",\n  \"last_name\": \"Sharma\",\n  \"email\": \"alice@example.com\",\n  \"phone\": \"+911234567890\"\n}"
+            },
+            "url": {"raw": "{{base_url}}/users/", "host": ["{{base_url}}"], "path": ["users", ""]}
+          }
+        },
+        {
+          "name": "Get User by ID",
+          "request": {
+            "method": "GET",
+            "url": {"raw": "{{base_url}}/users/{{user_id}}/", "host": ["{{base_url}}"], "path": ["users", "{{user_id}}", ""]}
+          }
+        }
+      ]
+    },
+    {
+      "name": "Workspaces",
+      "item": [
+        {
+          "name": "Create Workspace",
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Engineering Team\",\n  \"owner\": \"{{user_id}}\"\n}"
+            },
+            "url": {"raw": "{{base_url}}/workspaces/", "host": ["{{base_url}}"], "path": ["workspaces", ""]}
+          }
+        },
+        {
+          "name": "Get Workspace by ID",
+          "request": {
+            "method": "GET",
+            "url": {"raw": "{{base_url}}/workspaces/{{workspace_id}}/", "host": ["{{base_url}}"], "path": ["workspaces", "{{workspace_id}}", ""]}
+          }
+        },
+        {
+          "name": "Add Member to Workspace",
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"user\": \"{{user_id}}\",\n  \"role\": \"editor\"\n}"
+            },
+            "url": {"raw": "{{base_url}}/workspaces/{{workspace_id}}/members/", "host": ["{{base_url}}"], "path": ["workspaces", "{{workspace_id}}", "members", ""]}
+          }
+        },
+        {
+          "name": "List Workspace Members",
+          "request": {
+            "method": "GET",
+            "url": {"raw": "{{base_url}}/workspaces/{{workspace_id}}/members/", "host": ["{{base_url}}"], "path": ["workspaces", "{{workspace_id}}", "members", ""]}
+          }
+        },
+        {
+          "name": "Get Workspace Summary",
+          "request": {
+            "method": "GET",
+            "url": {"raw": "{{base_url}}/workspaces/{{workspace_id}}/summary/", "host": ["{{base_url}}"], "path": ["workspaces", "{{workspace_id}}", "summary", ""]}
+          }
+        }
+      ]
+    },
+    {
+      "name": "Documents",
+      "item": [
+        {
+          "name": "Create Document",
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"API Design Spec\",\n  \"content\": \"This document outlines the REST API design for CollabDocs.\",\n  \"workspace\": \"{{workspace_id}}\",\n  \"created_by\": \"{{user_id}}\",\n  \"status\": \"draft\"\n}"
+            },
+            "url": {"raw": "{{base_url}}/documents/", "host": ["{{base_url}}"], "path": ["documents", ""]}
+          }
+        },
+        {
+          "name": "Update Document (creates new version)",
+          "request": {
+            "method": "PUT",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"API Design Spec v2\",\n  \"content\": \"Updated content with new endpoints documented.\",\n  \"workspace\": \"{{workspace_id}}\",\n  \"created_by\": \"{{user_id}}\",\n  \"status\": \"published\",\n  \"saved_by\": \"{{user_id}}\"\n}"
+            },
+            "url": {"raw": "{{base_url}}/documents/{{document_id}}/", "host": ["{{base_url}}"], "path": ["documents", "{{document_id}}", ""]}
+          }
+        },
+        {
+          "name": "List Documents (with filters)",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/documents/?workspace={{workspace_id}}&status=draft&search=API",
+              "host": ["{{base_url}}"],
+              "path": ["documents", ""],
+              "query": [
+                {"key": "workspace", "value": "{{workspace_id}}"},
+                {"key": "status", "value": "draft"},
+                {"key": "search", "value": "API"},
+                {"key": "tag", "value": "", "disabled": true}
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Document Versions",
+          "request": {
+            "method": "GET",
+            "url": {"raw": "{{base_url}}/documents/{{document_id}}/versions/", "host": ["{{base_url}}"], "path": ["documents", "{{document_id}}", "versions", ""]}
+          }
+        },
+        {
+          "name": "Get Document Stats",
+          "request": {
+            "method": "GET",
+            "url": {"raw": "{{base_url}}/documents/{{document_id}}/stats/", "host": ["{{base_url}}"], "path": ["documents", "{{document_id}}", "stats", ""]}
+          }
+        },
+        {
+          "name": "Add Tags to Document",
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"tags\": [\"python\", \"backend\", \"api\"]\n}"
+            },
+            "url": {"raw": "{{base_url}}/documents/{{document_id}}/tags/", "host": ["{{base_url}}"], "path": ["documents", "{{document_id}}", "tags", ""]}
+          }
+        }
+      ]
+    },
+    {
+      "name": "Comments",
+      "item": [
+        {
+          "name": "Add Top-Level Comment",
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"document\": \"{{document_id}}\",\n  \"author\": \"{{user_id}}\",\n  \"content\": \"This section needs more detail on error handling.\",\n  \"parent\": null\n}"
+            },
+            "url": {"raw": "{{base_url}}/comments/", "host": ["{{base_url}}"], "path": ["comments", ""]}
+          }
+        },
+        {
+          "name": "Add Reply to Comment",
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"document\": \"{{document_id}}\",\n  \"author\": \"{{user_id}}\",\n  \"content\": \"Agreed — I'll add a section on 400/404/409 responses.\",\n  \"parent\": \"{{comment_id}}\"\n}"
+            },
+            "url": {"raw": "{{base_url}}/comments/", "host": ["{{base_url}}"], "path": ["comments", ""]}
+          }
+        },
+        {
+          "name": "List Comments for Document (threaded)",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/comments/?document={{document_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["comments", ""],
+              "query": [{"key": "document", "value": "{{document_id}}"}]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Tags",
+      "item": [
+        {
+          "name": "Create Tag",
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"python\"\n}"
+            },
+            "url": {"raw": "{{base_url}}/tags/", "host": ["{{base_url}}"], "path": ["tags", ""]}
+          }
+        },
+        {
+          "name": "List All Tags",
+          "request": {
+            "method": "GET",
+            "url": {"raw": "{{base_url}}/tags/", "host": ["{{base_url}}"], "path": ["tags", ""]}
+          }
+        }
+      ]
+    },
+    {
+      "name": "Audit Logs",
+      "item": [
+        {
+          "name": "Get Audit Logs (filtered)",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/audit-logs/?actor={{user_id}}&from=2024-01-01&to=2025-12-31",
+              "host": ["{{base_url}}"],
+              "path": ["audit-logs", ""],
+              "query": [
+                {"key": "actor", "value": "{{user_id}}"},
+                {"key": "from", "value": "2024-01-01"},
+                {"key": "to", "value": "2025-12-31"},
+                {"key": "model", "value": "Document", "disabled": true}
+              ]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

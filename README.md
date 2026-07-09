@@ -20,29 +20,38 @@ A collaborative document management platform with workspaces, version history, t
 ```
 CollabDocs/
 ├── docker-compose.yml          # PostgreSQL + backend containers
+├── collabdocs_postman.json     # Postman collection (all endpoints)
 ├── .gitignore
 │
 ├── backend/
 │   ├── manage.py
-│   ├── requirements.txt
+│   ├── requirements.txt        # Pinned runtime dependencies
+│   ├── requirements-dev.txt    # Dev tooling (ruff)
+│   ├── pyproject.toml          # Lint configuration
 │   ├── Dockerfile
 │   ├── .env                    # Local env vars (git-ignored)
 │   ├── .env.example            # Reference env template
+│   ├── scripts/
+│   │   └── smoke_test.py       # End-to-end check of every endpoint (SQLite)
 │   │
 │   ├── collabdocs/             # Django project config
-│   │   ├── settings.py
-│   │   ├── urls.py
+│   │   ├── settings.py         # Env-driven config, logging, security hardening
+│   │   ├── urls.py             # Routes + OpenAPI schema/Swagger UI
 │   │   ├── middleware.py       # Request logging middleware
 │   │   └── wsgi.py
 │   │
-│   └── api/                    # Main application
+│   └── api/                    # Main application (layered)
 │       ├── models.py           # User, Workspace, Document, Comment, Tag, AuditLog
-│       ├── serializers.py
-│       ├── views.py
+│       ├── serializers.py      # Validation & representation
+│       ├── views.py            # Thin HTTP layer (ViewSets + @actions)
+│       ├── services.py         # Business logic: atomic flows, versioning, tagging
+│       ├── filters.py          # Query-param filtering with input validation
+│       ├── utils.py            # Shared helpers (error responses, safe lookups)
 │       ├── urls.py
 │       ├── admin.py
 │       ├── signals.py          # Auto audit log on Document save
-│       └── migrations/
+│       ├── migrations/
+│       └── tests/              # 72 tests covering every endpoint
 │
 └── frontend/
     ├── vite.config.js          # Dev server + /api proxy to :8000
@@ -129,6 +138,12 @@ Document ──> AuditLog (via post_save signal)
 |---|---|---|
 | GET | `/api/audit-logs/` | List logs (filter: `actor`, `from`, `to`, `model`) |
 
+### API Documentation
+| Endpoint | Description |
+|---|---|
+| `/api/docs/` | Interactive Swagger UI |
+| `/api/schema/` | OpenAPI 3 schema (YAML) |
+
 ---
 
 ## Getting Started
@@ -208,6 +223,22 @@ docker exec collabdocs_backend python manage.py migrate
 | `DB_PASSWORD` | — | PostgreSQL password |
 | `DB_HOST` | `127.0.0.1` | Database host (`db` inside Docker) |
 | `DB_PORT` | `5432` | Database port |
+
+---
+
+## Testing & Code Quality
+
+The test suite runs against in-memory SQLite — no database container needed:
+
+```bash
+cd backend
+python manage.py test api        # 72 unit/integration tests
+
+python scripts/smoke_test.py     # end-to-end check of every endpoint
+
+pip install -r requirements-dev.txt
+ruff check api collabdocs manage.py   # lint
+```
 
 ---
 
