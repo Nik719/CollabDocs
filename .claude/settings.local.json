@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(Get-ChildItem \"C:\\\\Users\\\\nikhi\\\\OneDrive\\\\Desktop\\\\CollabDocs\")",
+      "Bash(Select-Object Name, PSIsContainer)",
+      "PowerShell(python --version; python -c \"import secrets; print\\(secrets.token_urlsafe\\(50\\)\\)\")",
+      "PowerShell(docker info *)",
+      "PowerShell($i = 0; do { $status = docker inspect collabdocs_db --format \"{{.State.Health.Status}}\" 2>&1; Start-Sleep -Seconds 2; $i++ } while \\($status -ne \"healthy\" -and $i -lt 15\\); Write-Output \"DB status: $status\")"
+    ]
+  }
+}
