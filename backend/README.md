@@ -55,23 +55,23 @@ psql -U postgres -c "CREATE DATABASE collabdocs;"
 python manage.py migrate
 ```
 
-### 6. Load shared seed data (optional)
+### 6. Load shared seed data
 
-The repo includes `api/fixtures/seed_data.json` — a Django fixture dump of sample data (users, a workspace, a document with two versions, a comment, tags, audit logs) so teammates see the same records without copying a database file around.
-
-To load it:
+Postgres itself isn't something git can track, so the repo carries `api/fixtures/seed_data.json` — a Django fixture dump of the current data (users, workspaces, documents, versions, tags) instead. On a **fresh** clone, load it once, right after migrating:
 
 ```bash
 python manage.py loaddata api/fixtures/seed_data.json
 ```
 
-To update it after making changes you want to share (e.g. via a PR), re-dump and commit the file:
+Run this exactly once against an empty database. `AuditLog` is deliberately left out of the fixture: `Document`'s `post_save` signal writes an audit-log row on every save, including the ones `loaddata` performs while deserializing — so loading it into a fresh DB naturally (and correctly) produces one `created` entry per document. Re-running `loaddata` against a DB that already has this data re-triggers that signal for every document again (Django's deserializer always looks like a fresh save), which piles up extra `created` audit-log rows each time — so don't re-run it once your local DB already has the seed data loaded.
+
+**Keeping it up to date:** whenever you've changed data locally that teammates should see (new users, workspaces, documents, etc.), re-export before you push:
 
 ```bash
-python manage.py dumpdata api --indent 2 --output api/fixtures/seed_data.json
+python scripts/update_seed.py
 ```
 
-`loaddata` upserts by primary key, so re-running it after a teammate already has the same rows is safe — it won't create duplicates.
+Then commit the updated `api/fixtures/seed_data.json` along with your other changes. This should become routine at the end of any session that touched data — otherwise a fresh clone will pull stale seed data.
 
 ### 7. Run the development server
 
