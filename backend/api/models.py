@@ -1,5 +1,3 @@
-import uuid
-
 from django.db import models
 
 
@@ -7,7 +5,6 @@ from django.db import models
 # User
 # ---------------------------------------------------------------------------
 class User(models.Model):
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     first_name = models.CharField(max_length=50)
     last_name = models.CharField(max_length=50)
     email = models.CharField(max_length=254, unique=True)   # CharField, not EmailField per spec
@@ -26,7 +23,6 @@ class User(models.Model):
 # Workspace
 # ---------------------------------------------------------------------------
 class Workspace(models.Model):
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     name = models.CharField(max_length=255)
     owner = models.ForeignKey(
         User, on_delete=models.CASCADE, related_name='owned_workspaces'
@@ -51,7 +47,6 @@ class WorkspaceMember(models.Model):
         EDITOR = 'editor', 'Editor'
         VIEWER = 'viewer', 'Viewer'
 
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     workspace = models.ForeignKey(
         Workspace, on_delete=models.CASCADE, related_name='members'
     )
@@ -86,7 +81,6 @@ class Document(models.Model):
         PUBLISHED = 'published', 'Published'
         ARCHIVED = 'archived', 'Archived'
 
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     title = models.CharField(max_length=255)
     content = models.TextField()
     workspace = models.ForeignKey(
@@ -112,7 +106,6 @@ class Document(models.Model):
 # DocumentVersion
 # ---------------------------------------------------------------------------
 class DocumentVersion(models.Model):
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     document = models.ForeignKey(
         Document, on_delete=models.CASCADE, related_name='versions'
     )
@@ -135,7 +128,6 @@ class DocumentVersion(models.Model):
 # Comment
 # ---------------------------------------------------------------------------
 class Comment(models.Model):
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     document = models.ForeignKey(
         Document, on_delete=models.CASCADE, related_name='comments'
     )
@@ -164,7 +156,6 @@ class Comment(models.Model):
 # Tag
 # ---------------------------------------------------------------------------
 class Tag(models.Model):
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     name = models.CharField(max_length=100, unique=True)
     documents = models.ManyToManyField(
         Document, related_name='tags', blank=True
@@ -182,13 +173,12 @@ class Tag(models.Model):
 # AuditLog
 # ---------------------------------------------------------------------------
 class AuditLog(models.Model):
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     actor = models.ForeignKey(
         User, on_delete=models.SET_NULL, null=True, related_name='audit_logs'
     )
     action = models.CharField(max_length=50)        # e.g. 'created', 'updated'
     model_name = models.CharField(max_length=100)   # e.g. 'Document'
-    object_id = models.CharField(max_length=100)    # UUID as string
+    object_id = models.CharField(max_length=100)    # object PK as string
     timestamp = models.DateTimeField(auto_now_add=True)
 
     class Meta:
