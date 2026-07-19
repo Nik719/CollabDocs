@@ -68,9 +68,7 @@ The project is structured as a monorepo consisting of:
 
 ```
 CollabDocs/
-├── docs/                        # Specifications, PRD, Architecture, and design palettes
 ├── collabdocs_postman.json      # Postman API Collection (19 requests / 17 endpoints)
-├── projectdetailspdf.pdf        # Requirement reference documentation
 ├── .gitignore                   # Excludes caches, builds, environments & dev assets
 ├── README.md                    # Root project documentation (this file)
 │
