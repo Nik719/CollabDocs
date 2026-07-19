@@ -36,6 +36,15 @@ cp .env.example .env
 
 ### 4. Create the PostgreSQL database
 
+If the local `psql` client is not installed on your machine, use the Docker PostgreSQL service that ships with this project:
+
+```bash
+docker compose up -d db
+docker compose exec -T db psql -U postgres -d postgres -c "CREATE DATABASE collabdocs;"
+```
+
+If you already have `psql` installed locally, the shorter command also works:
+
 ```bash
 psql -U postgres -c "CREATE DATABASE collabdocs;"
 ```
@@ -46,7 +55,25 @@ psql -U postgres -c "CREATE DATABASE collabdocs;"
 python manage.py migrate
 ```
 
-### 6. Run the development server
+### 6. Load shared seed data (optional)
+
+The repo includes `api/fixtures/seed_data.json` — a Django fixture dump of sample data (users, a workspace, a document with two versions, a comment, tags, audit logs) so teammates see the same records without copying a database file around.
+
+To load it:
+
+```bash
+python manage.py loaddata api/fixtures/seed_data.json
+```
+
+To update it after making changes you want to share (e.g. via a PR), re-dump and commit the file:
+
+```bash
+python manage.py dumpdata api --indent 2 --output api/fixtures/seed_data.json
+```
+
+`loaddata` upserts by primary key, so re-running it after a teammate already has the same rows is safe — it won't create duplicates.
+
+### 7. Run the development server
 
 ```bash
 python manage.py runserver

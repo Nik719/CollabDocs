@@ -1,0 +1,120 @@
+[
+{
+  "model": "api.user",
+  "pk": "bf3e94f9-e67e-4609-a784-aae9cf960ea7",
+  "fields": {
+    "first_name": "Nikhil",
+    "last_name": "Test",
+    "email": "nikhil.test@example.com",
+    "phone": "+919980316807",
+    "created_at": "2026-07-19T12:37:43.393Z"
+  }
+},
+{
+  "model": "api.workspace",
+  "pk": "5cd5ae9e-0c6d-424b-8d40-cfe2e7a2f2e2",
+  "fields": {
+    "name": "Product Team",
+    "owner": "bf3e94f9-e67e-4609-a784-aae9cf960ea7",
+    "is_active": true,
+    "created_at": "2026-07-19T12:37:59.322Z"
+  }
+},
+{
+  "model": "api.workspacemember",
+  "pk": "1eb7b7e0-f033-440f-9c8e-b01f868b5226",
+  "fields": {
+    "workspace": "5cd5ae9e-0c6d-424b-8d40-cfe2e7a2f2e2",
+    "user": "bf3e94f9-e67e-4609-a784-aae9cf960ea7",
+    "role": "admin",
+    "joined_at": "2026-07-19T12:37:59.324Z"
+  }
+},
+{
+  "model": "api.document",
+  "pk": "d126de37-170a-4c5e-8925-1704e0a023d8",
+  "fields": {
+    "title": "Q3 Roadmap",
+    "content": "Initial draft of the Q3 roadmap document. Adding more detail for v2.",
+    "workspace": "5cd5ae9e-0c6d-424b-8d40-cfe2e7a2f2e2",
+    "created_by": "bf3e94f9-e67e-4609-a784-aae9cf960ea7",
+    "status": "draft",
+    "updated_at": "2026-07-19T12:38:57.112Z"
+  }
+},
+{
+  "model": "api.documentversion",
+  "pk": "3c2572dd-5ce7-484a-8b70-ff436cca6abf",
+  "fields": {
+    "document": "d126de37-170a-4c5e-8925-1704e0a023d8",
+    "content": "Initial draft of the Q3 roadmap document.",
+    "version_number": 1,
+    "saved_by": "bf3e94f9-e67e-4609-a784-aae9cf960ea7",
+    "saved_at": "2026-07-19T12:38:39.232Z"
+  }
+},
+{
+  "model": "api.documentversion",
+  "pk": "53b5c06c-4e9b-443b-9f3a-c7a4200455f1",
+  "fields": {
+    "document": "d126de37-170a-4c5e-8925-1704e0a023d8",
+    "content": "Initial draft of the Q3 roadmap document. Adding more detail for v2.",
+    "version_number": 2,
+    "saved_by": "bf3e94f9-e67e-4609-a784-aae9cf960ea7",
+    "saved_at": "2026-07-19T12:38:57.117Z"
+  }
+},
+{
+  "model": "api.comment",
+  "pk": "99d5a58c-f005-4c23-804d-4202d592d8e1",
+  "fields": {
+    "document": "d126de37-170a-4c5e-8925-1704e0a023d8",
+    "author": "bf3e94f9-e67e-4609-a784-aae9cf960ea7",
+    "content": "Looks good, let's ship it.",
+    "parent": null,
+    "created_at": "2026-07-19T12:39:15.508Z"
+  }
+},
+{
+  "model": "api.tag",
+  "pk": "02f1d2b3-b16c-4bc1-a481-ee53676fcd41",
+  "fields": {
+    "name": "planning",
+    "documents": [
+      "d126de37-170a-4c5e-8925-1704e0a023d8"
+    ]
+  }
+},
+{
+  "model": "api.tag",
+  "pk": "45d7187e-aa4e-4c69-8c25-bd98aac0c9cc",
+  "fields": {
+    "name": "roadmap",
+    "documents": [
+      "d126de37-170a-4c5e-8925-1704e0a023d8"
+    ]
+  }
+},
+{
+  "model": "api.auditlog",
+  "pk": "216abd04-f89d-4ad7-89fb-dc7fbdb85397",
+  "fields": {
+    "actor": "bf3e94f9-e67e-4609-a784-aae9cf960ea7",
+    "action": "created",
+    "model_name": "Document",
+    "object_id": "d126de37-170a-4c5e-8925-1704e0a023d8",
+    "timestamp": "2026-07-19T12:38:39.228Z"
+  }
+},
+{
+  "model": "api.auditlog",
+  "pk": "a4396663-8a5f-4a87-b7ad-e0e7bc85527b",
+  "fields": {
+    "actor": "bf3e94f9-e67e-4609-a784-aae9cf960ea7",
+    "action": "updated",
+    "model_name": "Document",
+    "object_id": "d126de37-170a-4c5e-8925-1704e0a023d8",
+    "timestamp": "2026-07-19T12:38:57.115Z"
+  }
+}
+]
