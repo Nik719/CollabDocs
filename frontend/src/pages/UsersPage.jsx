@@ -1,14 +1,30 @@
 import React, { useState, useEffect } from 'react'
 import { Card, Button, Input, Modal, EmptyState, Avatar, Spinner, Badge } from '../components/ui.jsx'
-import { createUser, getUser } from '../services/api.js'
-import { useToastContext } from '../App.jsx'
+import { createUser, getUser, listUsers } from '../services/api.js'
+import { useToastContext, useAppContext } from '../App.jsx'
 
 export default function UsersPage() {
   const toast = useToastContext()
+  const { activeUser, setActiveUser } = useAppContext()
+  const [users, setUsers] = useState([])
+  const [loadingUsers, setLoadingUsers] = useState(true)
+
+  useEffect(() => { fetchUsers() }, [])
+
+  async function fetchUsers() {
+    setLoadingUsers(true)
+    try {
+      const res = await listUsers()
+      const data = res.data
+      setUsers(Array.isArray(data) ? data : data.results || [])
+    } catch (_) {
+      toast.error('Failed to load users')
+    }
+    setLoadingUsers(false)
+  }
   const [showCreate, setShowCreate] = useState(false)
   const [creating, setCreating] = useState(false)
   const [form, setForm] = useState({ first_name: '', last_name: '', email: '', phone: '' })
-  const [createdUsers, setCreatedUsers] = useState([])
   const [lookupId, setLookupId] = useState('')
   const [lookedUpUser, setLookedUpUser] = useState(null)
   const [looking, setLooking] = useState(false)
@@ -23,8 +39,11 @@ export default function UsersPage() {
     try {
       const res = await createUser(form)
       const newUser = res.data
-      setCreatedUsers(prev => [newUser, ...prev])
-      toast.success('User created!')
+      fetchUsers()
+      if (!activeUser) {
+        setActiveUser(newUser)
+        toast.success(`User created — you are now acting as ${newUser.first_name}`)
+      } else toast.success('User created!')
       setShowCreate(false)
       setForm({ first_name: '', last_name: '', email: '', phone: '' })
     } catch (err) {
@@ -95,21 +114,32 @@ export default function UsersPage() {
           )}
         </Card>
 
-        {/* Recently Created */}
+        {/* All Users */}
         <Card>
           <h2 style={{ fontSize: 'var(--text-base)', fontWeight: 600, color: 'var(--color-gray-900)', marginBottom: 'var(--space-4)' }}>
-            Created This Session
+            All Users
           </h2>
-          {createdUsers.length === 0 ? (
+          {loadingUsers ? (
+            <div style={{ display: 'flex', justifyContent: 'center', padding: 'var(--space-8)' }}>
+              <Spinner size={22} color="var(--color-brand-500)" />
+            </div>
+          ) : users.length === 0 ? (
             <EmptyState
               icon="◯"
-              title="No users created yet"
-              description="Users you create this session will appear here."
+              title="No users yet"
+              description="Create the first user to get started."
+              action={<Button onClick={() => setShowCreate(true)}>New User</Button>}
             />
           ) : (
             <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-3)' }}>
-              {createdUsers.map(u => (
-                <UserCard key={u.id} user={u} onCopy={copyId} />
+              {users.map(u => (
+                <UserCard
+                  key={u.id}
+                  user={u}
+                  onCopy={copyId}
+                  isActing={activeUser?.id === u.id}
+                  onActAs={() => { setActiveUser(u); toast.success(`Now acting as ${u.first_name}`) }}
+                />
               ))}
             </div>
           )}
@@ -127,7 +157,7 @@ export default function UsersPage() {
       }}>
         <span style={{ fontSize: 18, flexShrink: 0 }}>ℹ</span>
         <p style={{ fontSize: 'var(--text-sm)', color: 'var(--color-brand-800)', lineHeight: 1.6 }}>
-          <strong>Tip:</strong> Copy a user's UUID to use when creating workspaces (Owner ID), documents (Created By), or adding workspace members.
+          <strong>No login in CollabDocs:</strong> pick who you are with <strong>Act as</strong>. Everything you create — workspaces, documents, versions, comments — is attributed to your acting user (shown in the sidebar).
         </p>
       </div>
 
@@ -174,7 +204,7 @@ export default function UsersPage() {
   )
 }
 
-function UserCard({ user, onCopy }) {
+function UserCard({ user, onCopy, isActing, onActAs }) {
   return (
     <div style={{
       display: 'flex', alignItems: 'center', gap: 'var(--space-3)',
@@ -198,6 +228,22 @@ function UserCard({ user, onCopy }) {
           {user.id}
         </p>
       </div>
+      {onActAs && (isActing ? (
+        <Badge variant="admin">Acting</Badge>
+      ) : (
+        <button
+          onClick={onActAs}
+          style={{
+            padding: 'var(--space-1) var(--space-2)',
+            fontSize: 'var(--text-xs)', color: 'white',
+            background: 'var(--color-brand-600)',
+            borderRadius: 'var(--radius-sm)',
+            fontWeight: 500, flexShrink: 0,
+          }}
+        >
+          Act as
+        </button>
+      ))}
       <button
         onClick={() => onCopy(user.id)}
         style={{

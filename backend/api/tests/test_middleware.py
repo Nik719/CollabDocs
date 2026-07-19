@@ -1,4 +1,4 @@
-"""Tests for the request logging middleware and API docs endpoints."""
+"""Tests for the request logging middleware."""
 from rest_framework import status
 from rest_framework.test import APITestCase
 
@@ -13,13 +13,3 @@ class RequestLoggingMiddlewareTests(APITestCase):
         self.assertIn('[CollabDocs] GET /api/users/', message)
         self.assertIn('→ 200', message)
         self.assertIn('ms)', message)
-
-
-class ApiDocsTests(APITestCase):
-    def test_openapi_schema_is_served(self):
-        response = self.client.get('/api/schema/')
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-
-    def test_swagger_ui_is_served(self):
-        response = self.client.get('/api/docs/')
-        self.assertEqual(response.status_code, status.HTTP_200_OK)

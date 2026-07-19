@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react'
 import { Card, Button, Input, Select, Badge, Avatar, Modal, EmptyState, Spinner, StatCard } from '../components/ui.jsx'
-import { listWorkspaces, createWorkspace, listMembers, addMember, getWorkspaceSummary } from '../services/api.js'
-import { useToastContext } from '../App.jsx'
+import { listWorkspaces, createWorkspace, listMembers, addMember, getWorkspaceSummary, listUsers } from '../services/api.js'
+import { useToastContext, useAppContext } from '../App.jsx'
 
 export default function WorkspacesPage() {
   const toast = useToastContext()
+  const { activeUser, navigate } = useAppContext()
+  const [users, setUsers] = useState([])
   const [workspaces, setWorkspaces] = useState([])
   const [loading, setLoading] = useState(true)
   const [showCreate, setShowCreate] = useState(false)
@@ -12,12 +14,20 @@ export default function WorkspacesPage() {
   const [members, setMembers] = useState([])
   const [summary, setSummary] = useState(null)
   const [showAddMember, setShowAddMember] = useState(false)
-  const [form, setForm] = useState({ name: '', owner: '' })
+  const [form, setForm] = useState({ name: '' })
   const [memberForm, setMemberForm] = useState({ user: '', role: 'viewer' })
   const [creating, setCreating] = useState(false)
   const [addingMember, setAddingMember] = useState(false)
 
-  useEffect(() => { fetchWorkspaces() }, [])
+  useEffect(() => { fetchWorkspaces(); fetchUsers() }, [])
+
+  async function fetchUsers() {
+    try {
+      const res = await listUsers()
+      const data = res.data
+      setUsers(Array.isArray(data) ? data : data.results || [])
+    } catch (_) {}
+  }
 
   async function fetchWorkspaces() {
     setLoading(true)
@@ -33,16 +43,21 @@ export default function WorkspacesPage() {
 
   async function handleCreate(e) {
     e.preventDefault()
-    if (!form.name.trim() || !form.owner.trim()) {
-      toast.warning('Name and Owner ID are required')
+    if (!activeUser) {
+      toast.warning('Select an acting user first (sidebar)')
+      navigate('users')
+      return
+    }
+    if (!form.name.trim()) {
+      toast.warning('Workspace name is required')
       return
     }
     setCreating(true)
     try {
-      await createWorkspace({ name: form.name.trim(), owner: form.owner.trim() })
+      await createWorkspace({ name: form.name.trim(), owner: activeUser.id })
       toast.success('Workspace created!')
       setShowCreate(false)
-      setForm({ name: '', owner: '' })
+      setForm({ name: '' })
       fetchWorkspaces()
     } catch (err) {
       toast.error(err.response?.data?.error || 'Failed to create workspace')
@@ -69,8 +84,8 @@ export default function WorkspacesPage() {
 
   async function handleAddMember(e) {
     e.preventDefault()
-    if (!memberForm.user.trim()) {
-      toast.warning('User ID is required')
+    if (!memberForm.user) {
+      toast.warning('Select a user to add')
       return
     }
     setAddingMember(true)
@@ -249,14 +264,16 @@ export default function WorkspacesPage() {
             onChange={e => setForm(f => ({ ...f, name: e.target.value }))}
             required
           />
-          <Input
-            label="Owner User ID"
-            placeholder="UUID of the owner user"
-            value={form.owner}
-            onChange={e => setForm(f => ({ ...f, owner: e.target.value }))}
-            hint="Create a user first, then paste their UUID here"
-            required
-          />
+          <div style={{
+            display: 'flex', alignItems: 'center', gap: 'var(--space-3)',
+            background: 'var(--color-brand-50)', borderRadius: 'var(--radius-md)',
+            padding: 'var(--space-3)',
+          }}>
+            <Avatar name={activeUser ? `${activeUser.first_name} ${activeUser.last_name}` : '?'} size={28} />
+            <p style={{ fontSize: 'var(--text-sm)', color: 'var(--color-brand-800)' }}>
+              Owner: <strong>{activeUser ? `${activeUser.first_name} ${activeUser.last_name}` : 'no acting user selected'}</strong> — added as admin automatically
+            </p>
+          </div>
           <div style={{ display: 'flex', gap: 'var(--space-3)', justifyContent: 'flex-end', marginTop: 'var(--space-2)' }}>
             <Button variant="secondary" type="button" onClick={() => setShowCreate(false)}>Cancel</Button>
             <Button variant="primary" type="submit" loading={creating}>Create Workspace</Button>
@@ -267,12 +284,14 @@ export default function WorkspacesPage() {
       {/* Add Member Modal */}
       <Modal open={showAddMember} onClose={() => setShowAddMember(false)} title="Add Member">
         <form onSubmit={handleAddMember} style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-4)' }}>
-          <Input
-            label="User ID"
-            placeholder="UUID of the user to add"
+          <Select
+            label="User"
             value={memberForm.user}
             onChange={e => setMemberForm(f => ({ ...f, user: e.target.value }))}
-            required
+            options={[
+              { value: '', label: 'Select a user...' },
+              ...users.map(u => ({ value: u.id, label: `${u.first_name} ${u.last_name} (${u.email})` })),
+            ]}
           />
           <Select
             label="Role"

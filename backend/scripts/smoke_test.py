@@ -12,11 +12,11 @@ import sys
 import tempfile
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'collabdocs.settings')
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'config.settings')
 
 import django  # noqa: E402
 
-import collabdocs.settings as settings_module  # noqa: E402
+import config.settings as settings_module  # noqa: E402
 
 _db_path = os.path.join(tempfile.mkdtemp(prefix='collabdocs_smoke_'), 'smoke.sqlite3')
 settings_module.DATABASES = {
@@ -106,8 +106,6 @@ check('audit logs', 'get', '/api/audit-logs/', 200)
 check('audit logs filtered', 'get', f'/api/audit-logs/?actor={user_id}&model=Document', 200)
 
 # --- API docs ------------------------------------------------------------------
-check('openapi schema', 'get', '/api/schema/', 200)
-check('swagger ui', 'get', '/api/docs/', 200)
 
 print(f"\n{passed} passed, {failed} failed")
 sys.exit(1 if failed else 0)

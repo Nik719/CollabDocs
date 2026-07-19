@@ -5,7 +5,7 @@ import { useToastContext, useAppContext } from '../App.jsx'
 
 export default function DocumentEditor({ doc: initialDoc }) {
   const toast = useToastContext()
-  const { navigate } = useAppContext()
+  const { navigate, activeUser } = useAppContext()
   const [doc, setDoc] = useState(initialDoc)
   const [content, setContent] = useState(initialDoc?.content || '')
   const [title, setTitle] = useState(initialDoc?.title || '')
@@ -18,12 +18,10 @@ export default function DocumentEditor({ doc: initialDoc }) {
   const [activeTab, setActiveTab] = useState('editor')
   const [newComment, setNewComment] = useState('')
   const [replyTo, setReplyTo] = useState(null)
-  const [commentAuthor, setCommentAuthor] = useState('')
   const [postingComment, setPostingComment] = useState(false)
   const [tagInput, setTagInput] = useState('')
   const [showTagModal, setShowTagModal] = useState(false)
   const [addingTags, setAddingTags] = useState(false)
-  const [savedBy, setSavedBy] = useState('')
 
   useEffect(() => {
     if (!doc?.id) return
@@ -65,7 +63,7 @@ export default function DocumentEditor({ doc: initialDoc }) {
         workspace: doc.workspace,
         created_by: doc.created_by,
         status,
-        saved_by: savedBy || doc.created_by,
+        saved_by: activeUser?.id || doc.created_by,
       })
       setDoc(res.data)
       setDirty(false)
@@ -81,12 +79,12 @@ export default function DocumentEditor({ doc: initialDoc }) {
   async function handlePostComment(e) {
     e.preventDefault()
     if (!newComment.trim()) { toast.warning('Comment cannot be empty'); return }
-    if (!commentAuthor.trim()) { toast.warning('Enter your User ID to comment'); return }
+    if (!activeUser) { toast.warning('Select an acting user first (sidebar)'); return }
     setPostingComment(true)
     try {
       await createComment({
         document: doc.id,
-        author: commentAuthor.trim(),
+        author: activeUser.id,
         content: newComment.trim(),
         parent: replyTo,
       })
@@ -179,19 +177,6 @@ export default function DocumentEditor({ doc: initialDoc }) {
             <option value="published">Published</option>
             <option value="archived">Archived</option>
           </select>
-
-          <input
-            placeholder="Your User ID"
-            value={savedBy}
-            onChange={e => setSavedBy(e.target.value)}
-            style={{
-              height: 32, padding: '0 var(--space-2)',
-              border: '1px solid var(--color-gray-300)',
-              borderRadius: 'var(--radius-md)',
-              fontSize: 'var(--text-xs)', background: 'white', width: 160,
-              outline: 'none',
-            }}
-          />
 
           <Button size="sm" variant="secondary" onClick={() => setShowTagModal(true)}>⊕ Tags</Button>
 
@@ -374,11 +359,14 @@ export default function DocumentEditor({ doc: initialDoc }) {
                   </button>
                 </div>
               )}
-              <Input
-                placeholder="Your User ID"
-                value={commentAuthor}
-                onChange={e => setCommentAuthor(e.target.value)}
-              />
+              {activeUser && (
+                <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-2)' }}>
+                  <Avatar name={`${activeUser.first_name} ${activeUser.last_name}`} size={24} />
+                  <span style={{ fontSize: 'var(--text-xs)', color: 'var(--color-gray-500)' }}>
+                    Commenting as <strong>{activeUser.first_name} {activeUser.last_name}</strong>
+                  </span>
+                </div>
+              )}
               <Textarea
                 placeholder="Write a comment..."
                 rows={3}

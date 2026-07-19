@@ -11,4 +11,4 @@ ignore = [
 ]
 
 [tool.ruff.lint.isort]
-known-first-party = ["api", "collabdocs"]
+known-first-party = ["api", "config"]
