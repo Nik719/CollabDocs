@@ -5,7 +5,7 @@ import { useAppContext } from '../App.jsx'
 
 export default function Dashboard() {
   const { navigate } = useAppContext()
-  const [stats, setStats] = useState({ workspaces: 0, documents: 0, published: 0 })
+  const [stats, setStats] = useState({ workspaces: 0, documents: 0, published: 0, auditEvents: 0 })
   const [recentDocs, setRecentDocs] = useState([])
   const [auditLogs, setAuditLogs] = useState([])
   const [loading, setLoading] = useState(true)
@@ -36,6 +36,7 @@ export default function Dashboard() {
           const logs = logRes.value.data
           const logList = Array.isArray(logs) ? logs : logs.results || []
           setAuditLogs(logList.slice(0, 6))
+          setStats(prev => ({ ...prev, auditEvents: logList.length }))
         }
       } catch (_) {}
       setLoading(false)
@@ -71,7 +72,7 @@ export default function Dashboard() {
             <StatCard label="Workspaces" value={stats.workspaces} icon="⬡" color="var(--color-brand-600)" />
             <StatCard label="Documents" value={stats.documents} icon="◻" color="var(--color-info)" />
             <StatCard label="Published" value={stats.published} icon="✓" color="var(--color-success)" />
-            <StatCard label="Audit Events" value={auditLogs.length} icon="◈" color="var(--color-warning)" />
+            <StatCard label="Audit Events" value={stats.auditEvents} icon="◈" color="var(--color-warning)" />
           </div>
 
           {/* Two-column layout */}
