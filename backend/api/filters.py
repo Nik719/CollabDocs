@@ -7,6 +7,7 @@ parameters so malformed input yields a 400 instead of a server error.
 import uuid
 
 from django.db.models import Q, QuerySet
+from django.utils import timezone
 from django.utils.dateparse import parse_date, parse_datetime
 from rest_framework.exceptions import ValidationError
 
@@ -24,11 +25,19 @@ def validate_uuid(value: str, param: str) -> str:
 
 def _parse_temporal(value: str, param: str):
     """Accept an ISO date or datetime string; 400 on anything else."""
-    parsed = parse_datetime(value) or parse_date(value)
+    import datetime as _dt
+
+    parsed = parse_datetime(value)
+    if parsed is None:
+        as_date = parse_date(value)
+        if as_date is not None:
+            parsed = _dt.datetime.combine(as_date, _dt.time.min)
     if parsed is None:
         raise ValidationError(
             {'error': f"'{param}' must be an ISO date (YYYY-MM-DD) or datetime."}
         )
+    if timezone.is_naive(parsed):
+        parsed = timezone.make_aware(parsed)
     return parsed
 
 

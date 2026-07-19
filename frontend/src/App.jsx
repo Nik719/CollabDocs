@@ -25,7 +25,17 @@ export default function App() {
   const [page, setPage] = useState('dashboard')
   const [selectedDoc, setSelectedDoc] = useState(null)
   const [selectedWorkspace, setSelectedWorkspace] = useState(null)
-  const [activeUser, setActiveUser] = useState(null)
+  const [activeUser, setActiveUserState] = useState(() => {
+    try { return JSON.parse(localStorage.getItem('collabdocs.actingUser')) } catch { return null }
+  })
+
+  const setActiveUser = (user) => {
+    setActiveUserState(user)
+    try {
+      if (user) localStorage.setItem('collabdocs.actingUser', JSON.stringify(user))
+      else localStorage.removeItem('collabdocs.actingUser')
+    } catch { /* storage unavailable — acting user lives in memory only */ }
+  }
 
   const navigate = (p, data = {}) => {
     setPage(p)

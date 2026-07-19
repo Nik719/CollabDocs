@@ -5,7 +5,7 @@ A collaborative document platform API built with Django REST Framework. Users ca
 ## Tech Stack
 
 - Python 3.11+
-- Django 4.2
+- Django 5.1
 - Django REST Framework 3.15
 - PostgreSQL
 - python-dotenv
@@ -125,6 +125,27 @@ The API will be available at `http://localhost:8000/api/`.
 - **Middleware** — `RequestLoggingMiddleware` logs method, path, status code, and duration (ms) for every request
 - **Constraints** — `UniqueConstraint` on `WorkspaceMember(workspace, user)`; `IntegrityError` caught and returns `409`
 - **Query optimisation** — `select_related` on all nested serialisers, `annotate(Count(...))` on workspace/document endpoints, `Q` objects for OR filtering on document list
+
+---
+
+## Running the tests
+
+```bash
+python manage.py test api --settings=config.settings_test
+```
+
+Runs the full suite (71 tests) on in-memory SQLite — no Postgres server needed.
+Dev and production always use PostgreSQL via `.env`.
+
+---
+
+## Demo Video
+
+> 📹 **[Demo video link — add before submission]** (Loom / Google Drive)
+>
+> Shows: Postman walkthrough, one atomic transaction rolling back on failure,
+> middleware logs in the console, an aggregation endpoint, and the AuditLog
+> entry written by the signal after a document update.
 
 ---
 

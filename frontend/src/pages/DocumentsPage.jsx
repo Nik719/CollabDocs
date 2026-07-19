@@ -12,14 +12,14 @@ const STATUS_OPTIONS = [
 
 export default function DocumentsPage() {
   const toast = useToastContext()
-  const { navigate } = useAppContext()
+  const { navigate, activeUser } = useAppContext()
   const [docs, setDocs] = useState([])
   const [workspaces, setWorkspaces] = useState([])
   const [loading, setLoading] = useState(true)
   const [showCreate, setShowCreate] = useState(false)
   const [creating, setCreating] = useState(false)
   const [filters, setFilters] = useState({ workspace: '', status: '', search: '' })
-  const [form, setForm] = useState({ title: '', content: '', workspace: '', created_by: '', status: 'draft' })
+  const [form, setForm] = useState({ title: '', content: '', workspace: '', status: 'draft' })
   const [tagsInput, setTagsInput] = useState('')
 
   useEffect(() => {
@@ -59,8 +59,13 @@ export default function DocumentsPage() {
 
   async function handleCreate(e) {
     e.preventDefault()
-    if (!form.title.trim() || !form.workspace || !form.created_by.trim()) {
-      toast.warning('Title, Workspace, and Creator ID are required')
+    if (!activeUser) {
+      toast.warning('Select an acting user first (sidebar)')
+      navigate('users')
+      return
+    }
+    if (!form.title.trim() || !form.workspace) {
+      toast.warning('Title and Workspace are required')
       return
     }
     setCreating(true)
@@ -69,7 +74,7 @@ export default function DocumentsPage() {
         title: form.title.trim(),
         content: form.content,
         workspace: form.workspace,
-        created_by: form.created_by.trim(),
+        created_by: activeUser.id,
         status: form.status,
       })
       const newDoc = res.data
@@ -82,7 +87,7 @@ export default function DocumentsPage() {
 
       toast.success('Document created!')
       setShowCreate(false)
-      setForm({ title: '', content: '', workspace: '', created_by: '', status: 'draft' })
+      setForm({ title: '', content: '', workspace: '', status: 'draft' })
       setTagsInput('')
       fetchDocs()
     } catch (err) {
@@ -276,13 +281,6 @@ export default function DocumentsPage() {
               { value: '', label: 'Select a workspace...' },
               ...workspaces.map(ws => ({ value: ws.id, label: ws.name }))
             ]}
-          />
-          <Input
-            label="Created By (User ID)"
-            placeholder="UUID of the author"
-            value={form.created_by}
-            onChange={e => setForm(f => ({ ...f, created_by: e.target.value }))}
-            required
           />
           <Select
             label="Status"

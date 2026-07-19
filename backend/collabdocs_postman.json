@@ -5,12 +5,36 @@
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
   "variable": [
-    {"key": "base_url", "value": "http://localhost:8000/api", "type": "string"},
-    {"key": "user_id", "value": "", "type": "string"},
-    {"key": "workspace_id", "value": "", "type": "string"},
-    {"key": "document_id", "value": "", "type": "string"},
-    {"key": "comment_id", "value": "", "type": "string"},
-    {"key": "tag_id", "value": "", "type": "string"}
+    {
+      "key": "base_url",
+      "value": "http://localhost:8000/api",
+      "type": "string"
+    },
+    {
+      "key": "user_id",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "workspace_id",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "document_id",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "comment_id",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "tag_id",
+      "value": "",
+      "type": "string"
+    }
   ],
   "item": [
     {
@@ -18,21 +42,586 @@
       "item": [
         {
           "name": "Create User",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "if (pm.response.code === 201) {",
+                  "    const json = pm.response.json();",
+                  "    pm.collectionVariables.set('user_id', json.id);",
+                  "    console.log('Set user_id =', json.id);",
+                  "}"
+                ]
+              }
+            }
+          ],
           "request": {
             "method": "POST",
-            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
             "body": {
               "mode": "raw",
               "raw": "{\n  \"first_name\": \"Alice\",\n  \"last_name\": \"Sharma\",\n  \"email\": \"alice@example.com\",\n  \"phone\": \"+911234567890\"\n}"
             },
-            "url": {"raw": "{{base_url}}/users/", "host": ["{{base_url}}"], "path": ["users", ""]}
+            "url": {
+              "raw": "{{base_url}}/users/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "users",
+                ""
+              ]
+            }
           }
         },
         {
           "name": "Get User by ID",
           "request": {
             "method": "GET",
-            "url": {"raw": "{{base_url}}/users/{{user_id}}/", "host": ["{{base_url}}"], "path": ["users", "{{user_id}}", ""]}
+            "url": {
+              "raw": "{{base_url}}/users/{{user_id}}/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "users",
+                "{{user_id}}",
+                ""
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Seed Data (20 Indian Users)",
+      "description": "Optional: run this folder (Collection Runner) to quickly populate 20 realistic demo users before recording. Independent of the main walkthrough — skip it if you want the app to start truly empty.",
+      "item": [
+        {
+          "name": "01 — Shantanu Rao",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"first_name\": \"Shantanu\",\n  \"last_name\": \"Rao\",\n  \"email\": \"shantanu.rao@example.com\",\n  \"phone\": \"+919000000001\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/users/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "users",
+                ""
+              ]
+            }
+          }
+        },
+        {
+          "name": "02 — Subham Das",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"first_name\": \"Subham\",\n  \"last_name\": \"Das\",\n  \"email\": \"subham.das@example.com\",\n  \"phone\": \"+919000000002\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/users/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "users",
+                ""
+              ]
+            }
+          }
+        },
+        {
+          "name": "03 — Arnav Mehta",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"first_name\": \"Arnav\",\n  \"last_name\": \"Mehta\",\n  \"email\": \"arnav.mehta@example.com\",\n  \"phone\": \"+919000000003\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/users/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "users",
+                ""
+              ]
+            }
+          }
+        },
+        {
+          "name": "04 — Pritam Chatterjee",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"first_name\": \"Pritam\",\n  \"last_name\": \"Chatterjee\",\n  \"email\": \"pritam.chatterjee@example.com\",\n  \"phone\": \"+919000000004\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/users/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "users",
+                ""
+              ]
+            }
+          }
+        },
+        {
+          "name": "05 — Aman Verma",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"first_name\": \"Aman\",\n  \"last_name\": \"Verma\",\n  \"email\": \"aman.verma@example.com\",\n  \"phone\": \"+919000000005\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/users/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "users",
+                ""
+              ]
+            }
+          }
+        },
+        {
+          "name": "06 — Jackson Fernandes",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"first_name\": \"Jackson\",\n  \"last_name\": \"Fernandes\",\n  \"email\": \"jackson.fernandes@example.com\",\n  \"phone\": \"+919000000006\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/users/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "users",
+                ""
+              ]
+            }
+          }
+        },
+        {
+          "name": "07 — Rohit Sharma",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"first_name\": \"Rohit\",\n  \"last_name\": \"Sharma\",\n  \"email\": \"rohit.sharma@example.com\",\n  \"phone\": \"+919000000007\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/users/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "users",
+                ""
+              ]
+            }
+          }
+        },
+        {
+          "name": "08 — Priya Nair",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"first_name\": \"Priya\",\n  \"last_name\": \"Nair\",\n  \"email\": \"priya.nair@example.com\",\n  \"phone\": \"+919000000008\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/users/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "users",
+                ""
+              ]
+            }
+          }
+        },
+        {
+          "name": "09 — Ananya Reddy",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"first_name\": \"Ananya\",\n  \"last_name\": \"Reddy\",\n  \"email\": \"ananya.reddy@example.com\",\n  \"phone\": \"+919000000009\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/users/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "users",
+                ""
+              ]
+            }
+          }
+        },
+        {
+          "name": "10 — Kabir Malhotra",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"first_name\": \"Kabir\",\n  \"last_name\": \"Malhotra\",\n  \"email\": \"kabir.malhotra@example.com\",\n  \"phone\": \"+919000000010\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/users/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "users",
+                ""
+              ]
+            }
+          }
+        },
+        {
+          "name": "11 — Diya Kapoor",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"first_name\": \"Diya\",\n  \"last_name\": \"Kapoor\",\n  \"email\": \"diya.kapoor@example.com\",\n  \"phone\": \"+919000000011\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/users/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "users",
+                ""
+              ]
+            }
+          }
+        },
+        {
+          "name": "12 — Vihaan Joshi",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"first_name\": \"Vihaan\",\n  \"last_name\": \"Joshi\",\n  \"email\": \"vihaan.joshi@example.com\",\n  \"phone\": \"+919000000012\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/users/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "users",
+                ""
+              ]
+            }
+          }
+        },
+        {
+          "name": "13 — Ishaan Pillai",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"first_name\": \"Ishaan\",\n  \"last_name\": \"Pillai\",\n  \"email\": \"ishaan.pillai@example.com\",\n  \"phone\": \"+919000000013\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/users/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "users",
+                ""
+              ]
+            }
+          }
+        },
+        {
+          "name": "14 — Sneha Bhatt",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"first_name\": \"Sneha\",\n  \"last_name\": \"Bhatt\",\n  \"email\": \"sneha.bhatt@example.com\",\n  \"phone\": \"+919000000014\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/users/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "users",
+                ""
+              ]
+            }
+          }
+        },
+        {
+          "name": "15 — Aditya Kulkarni",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"first_name\": \"Aditya\",\n  \"last_name\": \"Kulkarni\",\n  \"email\": \"aditya.kulkarni@example.com\",\n  \"phone\": \"+919000000015\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/users/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "users",
+                ""
+              ]
+            }
+          }
+        },
+        {
+          "name": "16 — Meera Nambiar",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"first_name\": \"Meera\",\n  \"last_name\": \"Nambiar\",\n  \"email\": \"meera.nambiar@example.com\",\n  \"phone\": \"+919000000016\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/users/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "users",
+                ""
+              ]
+            }
+          }
+        },
+        {
+          "name": "17 — Rahul Bose",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"first_name\": \"Rahul\",\n  \"last_name\": \"Bose\",\n  \"email\": \"rahul.bose@example.com\",\n  \"phone\": \"+919000000017\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/users/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "users",
+                ""
+              ]
+            }
+          }
+        },
+        {
+          "name": "18 — Tanvi Shetty",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"first_name\": \"Tanvi\",\n  \"last_name\": \"Shetty\",\n  \"email\": \"tanvi.shetty@example.com\",\n  \"phone\": \"+919000000018\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/users/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "users",
+                ""
+              ]
+            }
+          }
+        },
+        {
+          "name": "19 — Karthik Subramaniam",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"first_name\": \"Karthik\",\n  \"last_name\": \"Subramaniam\",\n  \"email\": \"karthik.subramaniam@example.com\",\n  \"phone\": \"+919000000019\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/users/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "users",
+                ""
+              ]
+            }
+          }
+        },
+        {
+          "name": "20 — Neha Agarwal",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"first_name\": \"Neha\",\n  \"last_name\": \"Agarwal\",\n  \"email\": \"neha.agarwal@example.com\",\n  \"phone\": \"+919000000020\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/users/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "users",
+                ""
+              ]
+            }
           }
         }
       ]
@@ -42,47 +631,140 @@
       "item": [
         {
           "name": "Create Workspace",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "if (pm.response.code === 201) {",
+                  "    const json = pm.response.json();",
+                  "    pm.collectionVariables.set('workspace_id', json.id);",
+                  "    console.log('Set workspace_id =', json.id);",
+                  "}"
+                ]
+              }
+            }
+          ],
           "request": {
             "method": "POST",
-            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
             "body": {
               "mode": "raw",
               "raw": "{\n  \"name\": \"Engineering Team\",\n  \"owner\": \"{{user_id}}\"\n}"
             },
-            "url": {"raw": "{{base_url}}/workspaces/", "host": ["{{base_url}}"], "path": ["workspaces", ""]}
+            "url": {
+              "raw": "{{base_url}}/workspaces/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "workspaces",
+                ""
+              ]
+            }
+          }
+        },
+        {
+          "name": "List All Workspaces",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/workspaces/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "workspaces",
+                ""
+              ]
+            }
           }
         },
         {
           "name": "Get Workspace by ID",
           "request": {
             "method": "GET",
-            "url": {"raw": "{{base_url}}/workspaces/{{workspace_id}}/", "host": ["{{base_url}}"], "path": ["workspaces", "{{workspace_id}}", ""]}
+            "url": {
+              "raw": "{{base_url}}/workspaces/{{workspace_id}}/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "workspaces",
+                "{{workspace_id}}",
+                ""
+              ]
+            }
           }
         },
         {
           "name": "Add Member to Workspace",
           "request": {
             "method": "POST",
-            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
             "body": {
               "mode": "raw",
               "raw": "{\n  \"user\": \"{{user_id}}\",\n  \"role\": \"editor\"\n}"
             },
-            "url": {"raw": "{{base_url}}/workspaces/{{workspace_id}}/members/", "host": ["{{base_url}}"], "path": ["workspaces", "{{workspace_id}}", "members", ""]}
+            "url": {
+              "raw": "{{base_url}}/workspaces/{{workspace_id}}/members/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "workspaces",
+                "{{workspace_id}}",
+                "members",
+                ""
+              ]
+            }
           }
         },
         {
           "name": "List Workspace Members",
           "request": {
             "method": "GET",
-            "url": {"raw": "{{base_url}}/workspaces/{{workspace_id}}/members/", "host": ["{{base_url}}"], "path": ["workspaces", "{{workspace_id}}", "members", ""]}
+            "url": {
+              "raw": "{{base_url}}/workspaces/{{workspace_id}}/members/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "workspaces",
+                "{{workspace_id}}",
+                "members",
+                ""
+              ]
+            }
           }
         },
         {
           "name": "Get Workspace Summary",
           "request": {
             "method": "GET",
-            "url": {"raw": "{{base_url}}/workspaces/{{workspace_id}}/summary/", "host": ["{{base_url}}"], "path": ["workspaces", "{{workspace_id}}", "summary", ""]}
+            "url": {
+              "raw": "{{base_url}}/workspaces/{{workspace_id}}/summary/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "workspaces",
+                "{{workspace_id}}",
+                "summary",
+                ""
+              ]
+            }
           }
         }
       ]
@@ -92,26 +774,87 @@
       "item": [
         {
           "name": "Create Document",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "if (pm.response.code === 201) {",
+                  "    const json = pm.response.json();",
+                  "    pm.collectionVariables.set('document_id', json.id);",
+                  "    console.log('Set document_id =', json.id);",
+                  "}"
+                ]
+              }
+            }
+          ],
           "request": {
             "method": "POST",
-            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
             "body": {
               "mode": "raw",
               "raw": "{\n  \"title\": \"API Design Spec\",\n  \"content\": \"This document outlines the REST API design for CollabDocs.\",\n  \"workspace\": \"{{workspace_id}}\",\n  \"created_by\": \"{{user_id}}\",\n  \"status\": \"draft\"\n}"
             },
-            "url": {"raw": "{{base_url}}/documents/", "host": ["{{base_url}}"], "path": ["documents", ""]}
+            "url": {
+              "raw": "{{base_url}}/documents/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "documents",
+                ""
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Document by ID",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/documents/{{document_id}}/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "documents",
+                "{{document_id}}",
+                ""
+              ]
+            }
           }
         },
         {
           "name": "Update Document (creates new version)",
           "request": {
             "method": "PUT",
-            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
             "body": {
               "mode": "raw",
               "raw": "{\n  \"title\": \"API Design Spec v2\",\n  \"content\": \"Updated content with new endpoints documented.\",\n  \"workspace\": \"{{workspace_id}}\",\n  \"created_by\": \"{{user_id}}\",\n  \"status\": \"published\",\n  \"saved_by\": \"{{user_id}}\"\n}"
             },
-            "url": {"raw": "{{base_url}}/documents/{{document_id}}/", "host": ["{{base_url}}"], "path": ["documents", "{{document_id}}", ""]}
+            "url": {
+              "raw": "{{base_url}}/documents/{{document_id}}/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "documents",
+                "{{document_id}}",
+                ""
+              ]
+            }
           }
         },
         {
@@ -120,13 +863,31 @@
             "method": "GET",
             "url": {
               "raw": "{{base_url}}/documents/?workspace={{workspace_id}}&status=draft&search=API",
-              "host": ["{{base_url}}"],
-              "path": ["documents", ""],
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "documents",
+                ""
+              ],
               "query": [
-                {"key": "workspace", "value": "{{workspace_id}}"},
-                {"key": "status", "value": "draft"},
-                {"key": "search", "value": "API"},
-                {"key": "tag", "value": "", "disabled": true}
+                {
+                  "key": "workspace",
+                  "value": "{{workspace_id}}"
+                },
+                {
+                  "key": "status",
+                  "value": "draft"
+                },
+                {
+                  "key": "search",
+                  "value": "API"
+                },
+                {
+                  "key": "tag",
+                  "value": "",
+                  "disabled": true
+                }
               ]
             }
           }
@@ -135,26 +896,64 @@
           "name": "Get Document Versions",
           "request": {
             "method": "GET",
-            "url": {"raw": "{{base_url}}/documents/{{document_id}}/versions/", "host": ["{{base_url}}"], "path": ["documents", "{{document_id}}", "versions", ""]}
+            "url": {
+              "raw": "{{base_url}}/documents/{{document_id}}/versions/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "documents",
+                "{{document_id}}",
+                "versions",
+                ""
+              ]
+            }
           }
         },
         {
           "name": "Get Document Stats",
           "request": {
             "method": "GET",
-            "url": {"raw": "{{base_url}}/documents/{{document_id}}/stats/", "host": ["{{base_url}}"], "path": ["documents", "{{document_id}}", "stats", ""]}
+            "url": {
+              "raw": "{{base_url}}/documents/{{document_id}}/stats/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "documents",
+                "{{document_id}}",
+                "stats",
+                ""
+              ]
+            }
           }
         },
         {
           "name": "Add Tags to Document",
           "request": {
             "method": "POST",
-            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
             "body": {
               "mode": "raw",
               "raw": "{\n  \"tags\": [\"python\", \"backend\", \"api\"]\n}"
             },
-            "url": {"raw": "{{base_url}}/documents/{{document_id}}/tags/", "host": ["{{base_url}}"], "path": ["documents", "{{document_id}}", "tags", ""]}
+            "url": {
+              "raw": "{{base_url}}/documents/{{document_id}}/tags/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "documents",
+                "{{document_id}}",
+                "tags",
+                ""
+              ]
+            }
           }
         }
       ]
@@ -164,26 +963,69 @@
       "item": [
         {
           "name": "Add Top-Level Comment",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "if (pm.response.code === 201) {",
+                  "    const json = pm.response.json();",
+                  "    pm.collectionVariables.set('comment_id', json.id);",
+                  "    console.log('Set comment_id =', json.id);",
+                  "}"
+                ]
+              }
+            }
+          ],
           "request": {
             "method": "POST",
-            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
             "body": {
               "mode": "raw",
               "raw": "{\n  \"document\": \"{{document_id}}\",\n  \"author\": \"{{user_id}}\",\n  \"content\": \"This section needs more detail on error handling.\",\n  \"parent\": null\n}"
             },
-            "url": {"raw": "{{base_url}}/comments/", "host": ["{{base_url}}"], "path": ["comments", ""]}
+            "url": {
+              "raw": "{{base_url}}/comments/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "comments",
+                ""
+              ]
+            }
           }
         },
         {
           "name": "Add Reply to Comment",
           "request": {
             "method": "POST",
-            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
             "body": {
               "mode": "raw",
               "raw": "{\n  \"document\": \"{{document_id}}\",\n  \"author\": \"{{user_id}}\",\n  \"content\": \"Agreed — I'll add a section on 400/404/409 responses.\",\n  \"parent\": \"{{comment_id}}\"\n}"
             },
-            "url": {"raw": "{{base_url}}/comments/", "host": ["{{base_url}}"], "path": ["comments", ""]}
+            "url": {
+              "raw": "{{base_url}}/comments/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "comments",
+                ""
+              ]
+            }
           }
         },
         {
@@ -192,9 +1034,19 @@
             "method": "GET",
             "url": {
               "raw": "{{base_url}}/comments/?document={{document_id}}",
-              "host": ["{{base_url}}"],
-              "path": ["comments", ""],
-              "query": [{"key": "document", "value": "{{document_id}}"}]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "comments",
+                ""
+              ],
+              "query": [
+                {
+                  "key": "document",
+                  "value": "{{document_id}}"
+                }
+              ]
             }
           }
         }
@@ -205,21 +1057,59 @@
       "item": [
         {
           "name": "Create Tag",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "if (pm.response.code === 201) {",
+                  "    const json = pm.response.json();",
+                  "    pm.collectionVariables.set('tag_id', json.id);",
+                  "    console.log('Set tag_id =', json.id);",
+                  "}"
+                ]
+              }
+            }
+          ],
           "request": {
             "method": "POST",
-            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
             "body": {
               "mode": "raw",
               "raw": "{\n  \"name\": \"python\"\n}"
             },
-            "url": {"raw": "{{base_url}}/tags/", "host": ["{{base_url}}"], "path": ["tags", ""]}
+            "url": {
+              "raw": "{{base_url}}/tags/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "tags",
+                ""
+              ]
+            }
           }
         },
         {
           "name": "List All Tags",
           "request": {
             "method": "GET",
-            "url": {"raw": "{{base_url}}/tags/", "host": ["{{base_url}}"], "path": ["tags", ""]}
+            "url": {
+              "raw": "{{base_url}}/tags/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "tags",
+                ""
+              ]
+            }
           }
         }
       ]
@@ -233,13 +1123,31 @@
             "method": "GET",
             "url": {
               "raw": "{{base_url}}/audit-logs/?actor={{user_id}}&from=2024-01-01&to=2025-12-31",
-              "host": ["{{base_url}}"],
-              "path": ["audit-logs", ""],
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "audit-logs",
+                ""
+              ],
               "query": [
-                {"key": "actor", "value": "{{user_id}}"},
-                {"key": "from", "value": "2024-01-01"},
-                {"key": "to", "value": "2025-12-31"},
-                {"key": "model", "value": "Document", "disabled": true}
+                {
+                  "key": "actor",
+                  "value": "{{user_id}}"
+                },
+                {
+                  "key": "from",
+                  "value": "2024-01-01"
+                },
+                {
+                  "key": "to",
+                  "value": "2025-12-31"
+                },
+                {
+                  "key": "model",
+                  "value": "Document",
+                  "disabled": true
+                }
               ]
             }
           }

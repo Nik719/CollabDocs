@@ -1,4 +1,6 @@
 import React from 'react'
+import { Avatar } from './ui.jsx'
+import { useAppContext } from '../App.jsx'
 
 const navItems = [
   { id: 'dashboard',   label: 'Dashboard',   icon: '▦' },
@@ -9,6 +11,7 @@ const navItems = [
 ]
 
 export default function Sidebar({ activePage, onNavigate }) {
+  const { activeUser } = useAppContext()
   return (
     <aside style={{
       width: 232,
@@ -98,14 +101,48 @@ export default function Sidebar({ activePage, onNavigate }) {
         })}
       </nav>
 
-      {/* Footer */}
+      {/* Acting user (no auth — Design.md switcher) */}
       <div style={{
-        padding: 'var(--space-4)',
+        padding: 'var(--space-3)',
         borderTop: '1px solid var(--color-gray-100)',
       }}>
-        <p style={{ fontSize: 'var(--text-xs)', color: 'var(--color-gray-400)', textAlign: 'center' }}>
-          CollabDocs API v1.0
-        </p>
+        {activeUser ? (
+          <div style={{
+            display: 'flex', alignItems: 'center', gap: 'var(--space-3)',
+            padding: 'var(--space-2) var(--space-3)',
+            borderRadius: 'var(--radius-md)',
+            background: 'var(--color-gray-50)',
+          }}>
+            <Avatar name={`${activeUser.first_name} ${activeUser.last_name}`} size={28} />
+            <div style={{ flex: 1, minWidth: 0 }}>
+              <p style={{ fontSize: 'var(--text-xs)', fontWeight: 600, color: 'var(--color-gray-900)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                {activeUser.first_name} {activeUser.last_name}
+              </p>
+              <p style={{ fontSize: '0.65rem', color: 'var(--color-gray-400)' }}>Acting user</p>
+            </div>
+            <button
+              onClick={() => onNavigate('users')}
+              style={{ fontSize: 'var(--text-xs)', color: 'var(--color-brand-600)', fontWeight: 500, flexShrink: 0 }}
+            >
+              Switch
+            </button>
+          </div>
+        ) : (
+          <button
+            onClick={() => onNavigate('users')}
+            style={{
+              width: '100%',
+              padding: 'var(--space-2) var(--space-3)',
+              borderRadius: 'var(--radius-md)',
+              border: '1px dashed var(--color-brand-300)',
+              background: 'var(--color-brand-50)',
+              color: 'var(--color-brand-700)',
+              fontSize: 'var(--text-xs)', fontWeight: 500,
+            }}
+          >
+            Select acting user →
+          </button>
+        )}
       </div>
     </aside>
   )
