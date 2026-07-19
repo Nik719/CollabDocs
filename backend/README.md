@@ -36,6 +36,15 @@ cp .env.example .env
 
 ### 4. Create the PostgreSQL database
 
+If the local `psql` client is not installed on your machine, use the Docker PostgreSQL service that ships with this project:
+
+```bash
+docker compose up -d db
+docker compose exec -T db psql -U postgres -d postgres -c "CREATE DATABASE collabdocs;"
+```
+
+If you already have `psql` installed locally, the shorter command also works:
+
 ```bash
 psql -U postgres -c "CREATE DATABASE collabdocs;"
 ```
