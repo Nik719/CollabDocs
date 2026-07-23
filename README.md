@@ -6,7 +6,7 @@ The project is structured as a monorepo consisting of:
 1. A **Django REST Framework API** backend.
 2. A **React SPA** (Vite-powered) frontend.
 
----
+-----
 
 ## Tech Stack
 
